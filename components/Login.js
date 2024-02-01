@@ -2,7 +2,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import React, {useState} from 'react'
 import { useNavigation } from '@react-navigation/native';
 
-import { auth, db } from '../firebase';
+import { auth, db, provider, auth2 } from '../firebase';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -21,6 +21,19 @@ const Login = () => {
         }
     }
 
+
+
+    const handleSignIn_WithGoogle = async() =>{
+        try{
+            await auth.signInWithPopup(provider);
+            alert("Sign in with google success !");
+            navigation.navigate("Home")
+        }catch(error){
+            alert("⚠️ "+ error.message);
+        }
+    }
+
+
     const onPressSignIn = () => {
         handleSignIn(email, password);
         // const user ={
@@ -28,6 +41,12 @@ const Login = () => {
         //     name:name
         // }
     };
+
+
+    const onPressSignIn_Google = () => {
+        handleSignIn_WithGoogle();
+    };
+
 
   return (
     <KeyboardAvoidingView  
@@ -59,6 +78,9 @@ const Login = () => {
     <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={onPressSignIn} style={styles.button}>
             <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onPressSignIn_Google} style={styles.button}>
+            <Text style={styles.buttonText}>SIgn in With google</Text>
         </TouchableOpacity>
               <TouchableOpacity onPress={onPress = () => navigation.navigate('Register')} > 
               {/* style={[styles.button, styles.buttonOutline]} */}
@@ -96,6 +118,7 @@ const styles = StyleSheet.create({
         // height:'20%',
         padding:15,
         borderRadius:10,
+        margin:10,
 
     },
     buttonContainer:{
@@ -103,6 +126,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         marginTop:40,
+
     },
     buttonOutline:{
         backgroundColor:'white',
